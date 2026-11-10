@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fire Fighter Robot · Om Dhinoja</title>
+<meta name="description" content="Team robotics build: an autonomous fire-fighting robot with three IR flame sensors, an L293D driver PCB designed in EAGLE, a relay-switched pump and a servo-swept nozzle on an Arduino Nano.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#ffffff; --ink:#111111; --muted:#57534a; --rule:#e9e6dc; --accent:#111111; --card:#ffffff;
+  --plate:#ffffff; --pass:#0f8a4a; --fail:#d0261b; --chip:#fff3bf; --mark:#ffd23f;
+  --band:#ffffff; --on-band:#111111; --on-band-soft:#57534a; --hi:#111111; --on-hi:#ffd23f;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:6px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:var(--ink);text-underline-offset:3px;text-decoration-color:var(--mark);text-decoration-thickness:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+header.top{position:sticky;top:0;z-index:9;background:var(--paper);border-bottom:1px solid var(--rule)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;flex-wrap:wrap}
+.logo{font:600 15px var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+nav{display:flex;gap:18px;font-size:14px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--ink)}
+.hero{padding-block:64px 56px;display:grid;gap:14px}
+.eyebrow{font:500 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--on-band)}
+h1{font-size:clamp(34px,5.4vw,58px);line-height:1.04;letter-spacing:-.01em;font-weight:700}
+h1 span{background:linear-gradient(transparent 62%,var(--mark) 62%,var(--mark) 94%,transparent 94%)}
+.lede{font-size:clamp(17px,2vw,20px);color:var(--on-band-soft);max-width:62ch;margin:0}
+.scope{justify-self:start;font:500 13px var(--f-mono);border-radius:999px;padding:5px 12px;background:var(--hi);color:var(--on-hi)}
+.band{background:var(--band);color:var(--on-band);border-bottom:1px solid var(--rule)}
+.cover{display:grid;grid-template-columns:1.25fr 1fr;gap:2px;background:var(--rule);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden;margin-block:36px;box-shadow:0 10px 30px -18px rgba(20,15,38,.35)}
+.cover figure{margin:0;background:var(--plate);display:grid;align-content:center;justify-items:center;padding:24px 24px 40px;position:relative;min-width:0}
+.cover img{max-height:440px;width:auto;border-radius:4px}
+.cover figcaption,.plate figcaption{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#5d6470}
+.cover figcaption{position:absolute;left:12px;bottom:10px}
+.tblock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1.5px solid var(--ink);margin:0 0 56px}
+.tblock div{padding:10px 14px;border-right:1px solid var(--ink);min-width:0}
+.tblock div:last-child{border-right:0}
+.tblock dt{font:500 10.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tblock dd{margin:2px 0 0;font-size:15px}
+.sec{display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:28px;border-top:1px solid var(--rule)}
+.sec>h2{font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+.sec>h2::before{content:"";display:inline-block;width:10px;height:10px;margin-right:8px;background:var(--mark);vertical-align:1px}
+.sec>h2 small{display:block;font:400 12px var(--f-mono);letter-spacing:.04em;text-transform:none;color:var(--muted);margin-top:4px}
+.body{display:grid;gap:16px;min-width:0}
+.body p{margin:0;max-width:66ch}
+.body h3{font-size:19px;font-weight:600;margin-top:6px}
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:66ch}
+code{font:13.5px var(--f-mono);background:var(--chip);padding:1px 5px;border-radius:3px}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:var(--r);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--paper);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.c{text-align:center;font-variant-numeric:tabular-nums}
+.pn{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+.ok{color:var(--pass);font-weight:600}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.plate{margin:0;background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:14px;display:grid;gap:10px;align-content:space-between;min-width:0}
+.plate img{margin-inline:auto;max-height:320px;width:auto}
+.plate.narrow{max-width:440px}
+.plate figcaption{letter-spacing:.04em;text-transform:none;font-size:12.5px}
+.stat{display:flex;gap:12px;flex-wrap:wrap}
+.stat span{font:500 13px var(--f-mono);padding:4px 10px;border-radius:999px;background:#fff3bf;color:#111}
+.stat span:last-child{background:var(--hi);color:var(--on-hi)}
+.diagram{border:1px solid var(--rule);border-radius:var(--r);background:#fff;padding:16px}
+.diagram svg{width:100%;height:auto;display:block}
+.story{border-top:1px solid var(--rule);padding-block:36px 40px;display:grid;gap:22px}
+.story-head{display:grid;gap:8px}
+.story-head h2{justify-self:start;font-size:clamp(26px,3.4vw,36px);font-weight:700;background:linear-gradient(transparent 58%,var(--mark) 58%,var(--mark) 92%,transparent 92%)}
+.story-head p{margin:0;color:var(--muted);max-width:66ch}
+.panels{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;counter-reset:frame}
+.panel{counter-increment:frame;display:grid;grid-template-rows:auto 1fr;border:1.5px solid var(--ink);border-radius:var(--r);overflow:hidden;background:var(--card);min-width:0}
+.shot{margin:0;background:#fff;aspect-ratio:4/3;border-bottom:1.5px solid var(--ink);position:relative;overflow:hidden}
+.shot::before{content:counter(frame);position:absolute;top:8px;left:8px;width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:var(--hi);color:var(--on-hi);font:600 13px var(--f-mono);z-index:1}
+.shot img{width:100%;height:100%;object-fit:cover}
+.cap{padding:14px 16px 16px;display:grid;gap:6px;align-content:start}
+.cap .op{font:500 12px var(--f-mono);letter-spacing:.08em;color:var(--accent)}
+.cap h3{font-size:19px;font-weight:600}
+.cap p{margin:0;font-size:14.5px}
+.cap .guard{margin-top:4px;padding-top:8px;border-top:1px dashed var(--rule);color:var(--muted)}
+.cap .guard b{color:var(--pass);font-weight:600}
+@media (max-width:900px){.panels{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.panels{grid-template-columns:minmax(0,1fr)}}
+footer{border-top:1px solid var(--rule);margin-top:24px;padding-block:28px 40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+.sel{user-select:all;font-family:var(--f-mono);font-size:13.5px;color:var(--ink)}
+@media (max-width:820px){
+  .cover{grid-template-columns:1fr}
+  .tblock{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tblock div:nth-child(2){border-right:0}
+  .tblock div:nth-child(-n+2){border-bottom:1px solid var(--ink)}
+  .sec{grid-template-columns:minmax(0,1fr);gap:12px}
+  .pair{grid-template-columns:minmax(0,1fr)}
+}
+.backlink{justify-self:start;font:500 12.5px var(--f-mono);color:var(--muted);text-decoration:none;margin-bottom:6px}.backlink:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <a class="logo" href="../index.html" style="text-decoration:none;color:var(--ink)">Om Dhinoja</a>
+  <nav aria-label="Sections"><a href="#system">System</a><a href="#electrical">Electrical</a><a href="#logic">Control logic</a><a href="#storyboard">Storyboard</a><a href="#testing">Testing</a></nav>
+</div></header>
+
+<div class="band"><section class="hero wrap">
+  <a class="backlink" href="../index.html#projects">← All projects</a>
+  <div class="eyebrow">Robotics · Electromechanical build</div>
+  <h1><span>Fire Fighter Robot</span></h1>
+  <p class="lede">A battery-powered robot that finds a flame with three IR sensors, drives to it and puts it out with a servo-swept water jet. A team project: I built the robot, including the chassis, the motor-driver PCB and all of the wiring.</p>
+  <span class="scope">Team project · built and tested · 10 of 10 paper fires put out in team testing</span>
+</section></div>
+
+<main class="wrap">
+
+<div class="cover">
+  <figure><img src="images/robot-top.png" alt="Finished robot from the side: red steel chassis, drive wheel, water bottle tank with clear tubing, Arduino Nano, custom driver PCB, servo and flame sensors" width="1082" height="1086"><figcaption>Robot, side view</figcaption></figure>
+  <figure><img src="images/robot-side.png" alt="Robot from the front showing the three flame sensors, servo nozzle and custom driver PCB" width="304" height="322"><figcaption>Front: sensors, nozzle, PCB</figcaption></figure>
+</div>
+
+<dl class="tblock">
+  <div><dt>Role</dt><dd>Team build: I built the chassis, driver PCB and wiring</dd></div>
+  <div><dt>Tools</dt><dd>EAGLE, Arduino IDE, soldering station</dd></div>
+  <div><dt>Hardware</dt><dd>Arduino Nano, L293D, 3 IR flame sensors, servo, relay, pump</dd></div>
+  <div><dt>Result</dt><dd>10 of 10 paper fires out at 1 to 1.5 m</dd></div>
+</dl>
+
+<section class="sec" id="system">
+  <h2>The system<small>Block diagram · BOM</small></h2>
+  <div class="body">
+    <p>The Nano reads three digital flame sensors. It drives two gear motors through an L293D H-bridge on a custom PCB, switches the pump through a relay and sweeps the nozzle with a servo. A 7805 regulator on the PCB supplies 5 V from the battery.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 760 300" role="img" aria-label="Block diagram: battery feeds a 7805 regulator; three flame sensors feed the Arduino Nano; the Nano drives the L293D for two DC motors, a relay for the pump, and a servo for the nozzle">
+        <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker></defs>
+        <g font-family="IBM Plex Sans,Helvetica,Arial,sans-serif" font-size="14" fill="#111">
+          <rect x="20" y="40" width="150" height="104" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+          <text x="95" y="66" text-anchor="middle" font-weight="600">Flame sensors</text>
+          <text x="95" y="90" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">Left · pin 8</text>
+          <text x="95" y="108" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">Right · pin 9</text>
+          <text x="95" y="126" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">Front · pin 10</text>
+          <rect x="20" y="196" width="150" height="70" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+          <text x="95" y="226" text-anchor="middle" font-weight="600">Battery</text>
+          <text x="95" y="246" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">7805 → 5 V</text>
+          <rect x="270" y="96" width="170" height="104" rx="6" fill="#ffd23f" stroke="#111" stroke-width="1.5"/>
+          <text x="355" y="140" text-anchor="middle" font-weight="700">Arduino Nano</text>
+          <text x="355" y="162" text-anchor="middle" font-size="12" font-family="IBM Plex Mono,monospace">control logic</text>
+          <rect x="540" y="20" width="200" height="66" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+          <text x="640" y="46" text-anchor="middle" font-weight="600">L293D driver PCB</text>
+          <text x="640" y="66" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">pins 2–5 → 2 motors</text>
+          <rect x="540" y="116" width="200" height="66" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+          <text x="640" y="142" text-anchor="middle" font-weight="600">Relay</text>
+          <text x="640" y="162" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">pin 6 → water pump</text>
+          <rect x="540" y="212" width="200" height="66" rx="6" fill="#fff" stroke="#111" stroke-width="1.5"/>
+          <text x="640" y="238" text-anchor="middle" font-weight="600">Servo</text>
+          <text x="640" y="258" text-anchor="middle" font-size="12" fill="#57534a" font-family="IBM Plex Mono,monospace">pin 11 → nozzle sweep</text>
+        </g>
+        <g stroke="#111" stroke-width="1.6" fill="none" marker-end="url(#a)">
+          <path d="M170 92 H230 V130 H266"/>
+          <path d="M170 231 H230 V170 H266"/>
+          <path d="M440 120 H490 V53 H536"/>
+          <path d="M440 148 H536"/>
+          <path d="M440 176 H490 V245 H536"/>
+        </g>
+      </svg>
+    </div>
+    <h3>Bill of materials</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Item</th><th>Function</th><th>Qty</th><th>Make / buy</th></tr></thead>
+      <tbody>
+        <tr><td>Driver PCB (L293D, 7805, terminal blocks)</td><td>Motor drive and 5 V supply</td><td class="c">1</td><td>Made: designed in EAGLE, soldered by me</td></tr>
+        <tr><td>Arduino Nano</td><td>Controller</td><td class="c">1</td><td>Buy</td></tr>
+        <tr><td>IR flame sensor module (LM393, digital out)</td><td>Flame detection: left, front, right</td><td class="c">3</td><td>Buy</td></tr>
+        <tr><td>DC gear motor with wheel</td><td>Drive</td><td class="c">2</td><td>Buy</td></tr>
+        <tr><td>Relay module</td><td>Pump switching</td><td class="c">1</td><td>Buy</td></tr>
+        <tr><td>Mini water pump, tubing, bottle tank</td><td>Water delivery</td><td class="c">1 set</td><td>Buy</td></tr>
+        <tr><td>Micro servo</td><td>Nozzle sweep</td><td class="c">1</td><td>Buy</td></tr>
+        <tr><td>Steel chassis bracket</td><td>Structure</td><td class="c">1</td><td>Buy</td></tr>
+        <tr><td>Battery and rocker switch</td><td>Power</td><td class="c">1 set</td><td>Buy</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec" id="electrical">
+  <h2>Electrical design<small>EAGLE schematic · PCB</small></h2>
+  <div class="body">
+    <p>I designed a small driver board instead of using a loose module. A 7805 regulator takes an 8 to 30 V input and supplies 5 V. The L293D dual H-bridge drives both motors, with jumper headers for its two enables, screw terminals for the motor outputs, a header for the four control inputs and an LED to show the board has power.</p>
+    <div class="pair">
+      <figure class="plate"><img src="images/eagle-schematic.png" alt="EAGLE schematic of the L293D motor driver board with 7805 regulator, enable headers, motor terminals and input pins" width="372" height="306"><figcaption>Schematic: L293D, 7805 regulator, enable headers, motor outputs and input pins.</figcaption></figure>
+      <figure class="plate"><img src="images/eagle-pcb.png" alt="EAGLE PCB layout of the driver board" width="240" height="306"><figcaption>Board layout: EN1/EN2, OUT1–4, VIN/GND/5V and inputs 1–4 on headers.</figcaption></figure>
+    </div>
+    <!-- Breadboard simulation removed until authorship is confirmed. To restore:
+    <p>Before building, I checked the circuit as a breadboard simulation. The simulation used an Arduino Uno; the robot uses a Nano with the same pin map.</p>
+    <figure class="plate narrow"><img src="images/breadboard-simulation.png" alt="Breadboard simulation with Arduino Uno, flame sensors, servo, motors and a 9 V battery" width="600" height="586"><figcaption>Breadboard simulation of the drive, sensor and servo circuit.</figcaption></figure>
+    -->
+  </div>
+</section>
+
+<section class="sec" id="build">
+  <h2>Build<small>My part</small></h2>
+  <div class="body">
+    <p>I assembled the chassis, mounted the motors, wheels, PCB, Nano, servo and sensors, soldered the driver board and wired the whole robot. The tank is a bottle on the chassis. Tubing runs from the pump to a nozzle on the servo horn, so one sweep covers the area in front of the robot.</p>
+    <div class="stat"><span>Driver PCB: designed, soldered, tested</span><span>Wiring: prototype jumper harness</span></div>
+    <p>The jumper-wire harness worked, but it is the first thing I would change (see next steps).</p>
+  </div>
+</section>
+
+<section class="sec" id="logic">
+  <h2>Control logic<small>Arduino sketch</small></h2>
+  <div class="body">
+    <p>The flame sensors are active-low: they read <code>0</code> when they see a flame.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Sensors</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>No flame on any sensor</td><td>Brake both motors (both L293D inputs high); nozzle centered at 90°</td></tr>
+        <tr><td>Left or right sees a flame</td><td>Pivot, driving one motor and holding the other, until the flame is in front</td></tr>
+        <tr><td>Front sees a flame</td><td>Drive forward for a fixed time (about 0.8 s), brake, then run the extinguish routine</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Pin</th><th>Connection</th></tr></thead>
+      <tbody>
+        <tr><td class="pn">8, 9, 10</td><td>Left, right and front flame sensors</td></tr>
+        <tr><td class="pn">2, 3, 4, 5</td><td>L293D inputs, left and right motors</td></tr>
+        <tr><td class="pn">6</td><td>Relay, water pump</td></tr>
+        <tr><td class="pn">11</td><td>Servo, nozzle</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="story" id="storyboard">
+  <div class="story-head">
+    <h2>One fire, start to finish</h2>
+    <p>A single run as the code executes it, from idle to reset. Illustrations, not photos.</p>
+  </div>
+  <ol class="panels">
+    <li class="panel"><figure class="shot"><img src="images/story-1-idle.jpg" alt="Sketch: robot idle on the floor, no fire" width="524" height="460"></figure>
+      <div class="cap"><span class="op">STEP 1</span><h3>Idle</h3><p>Motors braked, nozzle centered at 90°. The robot watches all three sensors.</p><p class="guard"><b>Trigger</b> all sensors read 1: no flame.</p></div></li>
+    <li class="panel"><figure class="shot"><img src="images/story-2-detect.jpg" alt="Sketch: dotted line from the side flame sensor to a small fire" width="524" height="460"></figure>
+      <div class="cap"><span class="op">STEP 2</span><h3>Detect</h3><p>A flame appears to one side and that side's sensor picks it up.</p><p class="guard"><b>Trigger</b> left or right sensor reads 0.</p></div></li>
+    <li class="panel"><figure class="shot"><img src="images/story-3-turn.jpg" alt="Sketch: curved arrow showing the robot pivoting toward the fire" width="524" height="460"></figure>
+      <div class="cap"><span class="op">STEP 3</span><h3>Turn</h3><p>One motor drives, the other holds, and the robot pivots until the flame is ahead.</p><p class="guard"><b>Done when</b> the front sensor sees the flame.</p></div></li>
+    <li class="panel"><figure class="shot"><img src="images/story-4-approach.jpg" alt="Sketch: straight arrow from the robot toward the fire" width="524" height="460"></figure>
+      <div class="cap"><span class="op">STEP 4</span><h3>Approach</h3><p>Both motors drive forward for a fixed, hand-tuned time, then brake.</p><p class="guard"><b>Drive time</b> about 0.8 s: a 300 ms loop delay plus 500 ms at the start of the extinguish routine.</p></div></li>
+    <li class="panel"><figure class="shot"><img src="images/story-5-spray.jpg" alt="Sketch: water from the nozzle landing on the flame, dashed arcs showing the sweep" width="524" height="460"></figure>
+      <div class="cap"><span class="op">STEP 5</span><h3>Spray</h3><p>The relay switches the pump on. After 0.5 s the servo sweeps the nozzle 50° → 130° → 50°.</p><p class="guard"><b>Duration</b> pump on for about 2.1 s, including a 1.6 s sweep.</p></div></li>
+    <li class="panel"><figure class="shot"><img src="images/story-6-reset.jpg" alt="Sketch: scorched wet patch with a wisp of smoke, robot idle" width="524" height="460"></figure>
+      <div class="cap"><span class="op">STEP 6</span><h3>Reset</h3><p>Pump off, nozzle back to 90°, and the robot returns to watching the sensors.</p><p class="guard"><b>Repeats</b> if a sensor still sees flame.</p></div></li>
+  </ol>
+</section>
+
+<section class="sec" id="testing">
+  <h2>Testing<small>Team test matrix</small></h2>
+  <div class="body">
+    <p>The team tested the robot against a test matrix of small paper fires lit from different ignition sources. A run counted as a pass only if the robot found the fire and put it out completely. I was part of the team that ran the tests.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Measure</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Fires put out</td><td><span class="ok">10 of 10</span></td></tr>
+        <tr><td>Working distance</td><td>1 to 1.5 m</td></tr>
+        <tr><td>Pass criterion</td><td>Fire located and fully extinguished</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec" id="next">
+  <h2>Next steps<small>What I would change</small></h2>
+  <div class="body">
+    <ul class="plain">
+      <li><b>Closed-loop approach:</b> add an ultrasonic sensor so the robot stops at a measured distance, instead of a fixed timed drive (about 0.8 s) that changes with battery charge and floor surface. The same sensor adds obstacle avoidance.</li>
+      <li><b>Aim at the strongest flame:</b> use the sensors' analog output instead of on/off detection.</li>
+      <li><b>Spray until it's out:</b> re-check the sensors after spraying, instead of a fixed spray of about 2 s.</li>
+      <li><b>Non-blocking code:</b> replace <code>delay()</code> with <code>millis()</code> timing so the robot keeps sensing while it moves.</li>
+      <li><b>Cleaner build:</b> put the Nano on the driver PCB and replace jumper wires with a keyed harness.</li>
+    </ul>
+  </div>
+</section>
+
+<footer id="contact">
+  <span>Om Dhinoja · Manufacturing Engineer · Boston, MA</span>
+  <span><span class="sel">dhinoja.o@gmail.com</span> · <a href="https://www.linkedin.com/in/om-dhinoja" target="_blank" rel="noopener">LinkedIn</a></span>
+</footer>
+
+</main>
+</body>
+</html>
